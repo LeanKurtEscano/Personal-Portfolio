@@ -21,12 +21,12 @@ export const MyProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   const [toggleLog , setToggleLog] = useState(false);
   const [toggleSesh, setToggleSesh] = useState(false);
 
-
+ const [toggleUp, setToggleUp] = useState(false);
   const [result, setResult] = useState(0);
   const [runTimer, setRunTimer] = useState(false);
 
   return (
-    <MyContext.Provider value={{ isAuthenticated, setIsAuthenticated,result, setResult, userDetails, setUserDetails,runTimer,setRunTimer, toggleLog , setToggleLog,session,setSession,toggleSesh,setToggleSesh}}>
+    <MyContext.Provider value={{toggleUp,setToggleUp, isAuthenticated, setIsAuthenticated,result, setResult, userDetails, setUserDetails,runTimer,setRunTimer, toggleLog , setToggleLog,session,setSession,toggleSesh,setToggleSesh}}>
       {children}
     </MyContext.Provider>
   );

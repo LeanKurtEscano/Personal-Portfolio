@@ -16,6 +16,7 @@ const LogOut:React.FC = () => {
             if (response.data.success) {
                 setIsAuthenticated(false);
                 setToggleLog(false);
+                localStorage.removeItem("session");
                 navigate('/');
             }
         } catch {

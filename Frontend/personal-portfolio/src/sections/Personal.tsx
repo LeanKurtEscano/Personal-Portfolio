@@ -4,7 +4,7 @@ import puge from '../assets/puge.jpg';
 
 const Personal = () => {
   return (
-    <section className="w-full flex pl-[100px]    items-center justify-center h-auto bg-darkbg">
+    <section className="w-full flex md:pl-[100px] pr-[8px]  pt-[20px]  items-center justify-center h-auto bg-darkbg">
       <div className="flex h-screen items-center justify-center pl-20 pb-36 p-5">
         <div className="grid md:grid-cols-2 grid-cols-1 items-center gap-10 md:px-10">
           <motion.div
@@ -13,7 +13,7 @@ const Personal = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1 }}
           >
-            <h1 className="mb-2 text-3xl font-bold text-white">
+            <h1 className="mb-2 md:text-3xl text-xl font-bold text-white">
               <span className="bg-gradient-to-br  from-cyan-400 to-blue-600 bg-clip-text text-transparent text-cyan-500">Hi,</span> I am Lean Kurt Escano
             </h1>
             <p className="mb-6 text-white">
@@ -21,7 +21,7 @@ const Personal = () => {
               System Development.
             </p>
 
-            <div className="flex justify-center mt-5 space-x-5">
+            <div className="flex justify-center mt-5 space-x-5 pr-10">
               <a href="https://x.com/Escano_Lean" target="_blank" rel="noopener noreferrer"
                 className="inline-block text-gray-400"><span className="sr-only">Twitter</span><svg
                   stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512"

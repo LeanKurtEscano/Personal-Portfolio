@@ -17,3 +17,13 @@ export const menuItems = [
  
    
 ];
+
+
+export const activities = [
+    { id: 1, title: 'Activity 1', link: 'https://colab.research.google.com/' },
+    { id: 2, title: 'Activity 2', link: 'https://colab.research.google.com/' },
+    { id: 3, title: 'Activity 3', link: 'https://colab.research.google.com/' },
+    { id: 4, title: 'Activity 4', link: 'https://colab.research.google.com/' },
+    { id: 5, title: 'Activity 5', link: 'https://colab.research.google.com/' },
+    { id: 6, title: 'Activity 6', link: 'https://colab.research.google.com/' },
+  ];
