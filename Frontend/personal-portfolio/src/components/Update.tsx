@@ -26,9 +26,10 @@ interface UserProfile {
     refetchProfile: () => void;
     setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;  
     setValidationError: React.Dispatch<React.SetStateAction<ValidationError>>;
+    setToggleUpdate: React.Dispatch<React.SetStateAction<boolean>>;  
   }
   
-  const Update: React.FC<LogOutProps> = ({ userProfile,refetchProfile, setIsEditing,setValidationError }) => { 
+  const Update: React.FC<LogOutProps> = ({ userProfile,refetchProfile, setIsEditing,setValidationError,setToggleUpdate }) => { 
     const { setToggleUp } = useMyContext();
    
     const handleUpdate = async (e: React.FormEvent) => {
@@ -91,9 +92,11 @@ interface UserProfile {
       });
 
       if(response.status === 200){
+        setToggleUpdate(true);
         setToggleUp(false);
         refetchProfile();
         setIsEditing(false);
+        
       }
       
     };

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useMyContext } from '../context/MyContext';
+import UpdateNotif from '../components/UpdateNotif';
 import Update from '../components/Update';
 
-import { validateFirstName,validateMiddleName,validateLastName,validateAge,validateContactNumber,validateEmail } from '../constants/validation';
 interface UserProfile {
   first_name: string;
   middle_name: string;
@@ -25,8 +25,9 @@ interface ValidationError {
 }
 
 const Profile: React.FC = () => {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [toggleUpdate, setToggleUpdate] = useState(false);
   const [formData, setFormData] = useState<UserProfile>({
     first_name: '',
     middle_name: '',
@@ -37,27 +38,28 @@ const Profile: React.FC = () => {
     email: ''
   });
 
-  const [validationError,setValidationError] = useState<ValidationError>({
-  fnameError: "",
-  lnameError:"",
-  mnameError: "",
-  bdayError: "", 
-  ageError: "",
-  cnumberError: "",
-  emailError: "",
+
+  const [validationError, setValidationError] = useState<ValidationError>({
+    fnameError: "",
+    lnameError: "",
+    mnameError: "",
+    bdayError: "",
+    ageError: "",
+    cnumberError: "",
+    emailError: "",
   })
 
-  const {toggleUp,setToggleUp} = useMyContext();
+  const { toggleUp, setToggleUp } = useMyContext();
 
-  const getProfile = async() => {
+  const getProfile = async () => {
 
-    try{
-      const response = await axios.post('http://127.0.0.1:5000/user-profile/profile',{
-        
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/user-profile/profile', {
+
         withCredentials: true
-      }) 
+      })
 
-      if(response.status === 200) {
+      if (response.status === 200) {
         const formattedBirthday = new Date(response.data.birthday).toISOString().split('T')[0];
         setFormData({
           first_name: response.data.first_name,
@@ -70,31 +72,41 @@ const Profile: React.FC = () => {
         })
         console.log(response.data);
       }
-  
-    } catch(error) {
+
+    } catch (error) {
       alert("Failed to fetch data");
 
     }
-    
+
 
   }
+
+  useEffect(() => {
+    if (toggleUpdate) {
+      const timer = setTimeout(() => {
+        setToggleUpdate(false);
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
+  }, [toggleUpdate]);
+
   useEffect(() => {
     getProfile();
-    
+
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
-  
+
 
   const showUpdate = () => {
     setToggleUp(!toggleUp);
   }
   const refetchProfile = () => {
-    getProfile(); 
-    setToggleUp(false); 
+    getProfile();
+    setToggleUp(false);
 
   }
 
@@ -102,7 +114,7 @@ const Profile: React.FC = () => {
     <section className="flex items-center h-auto min-h-screen pb-11 justify-center bg-darkbg">
       <div className="md:w-[500px] w-[200px] bg-darkbg p-4 sm:p-6">
         <h1 className="bg-gradient-to-br text-3xl from-cyan-400 to-blue-600 bg-clip-text text-transparent font-bold mb-4">Profile</h1>
-        <form  className="space-y-4">
+        <form className="space-y-4">
           <div>
             <label htmlFor="first_name" className="block text-sm text-slate-100 font-medium">First Name</label>
             <input
@@ -112,8 +124,8 @@ const Profile: React.FC = () => {
               value={formData.first_name}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`${isEditing ? 
-                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300' 
+              className={`${isEditing ?
+                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
@@ -130,8 +142,8 @@ const Profile: React.FC = () => {
               value={formData.middle_name}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`${isEditing ? 
-                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300' 
+              className={`${isEditing ?
+                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
@@ -149,8 +161,8 @@ const Profile: React.FC = () => {
               value={formData.last_name}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`${isEditing ? 
-                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300' 
+              className={`${isEditing ?
+                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
@@ -168,8 +180,8 @@ const Profile: React.FC = () => {
               value={formData.birthday}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`${isEditing ? 
-                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300' 
+              className={`${isEditing ?
+                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
@@ -177,7 +189,7 @@ const Profile: React.FC = () => {
           {validationError.bdayError && (
             <p className='mt-5 text-red-600'>{validationError.bdayError}</p>
           )}
-          
+
 
           <div>
             <label htmlFor="age" className="block text-slate-100 text-sm font-medium">Age</label>
@@ -188,8 +200,8 @@ const Profile: React.FC = () => {
               value={formData.age}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`${isEditing ? 
-                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300' 
+              className={`${isEditing ?
+                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
@@ -206,8 +218,8 @@ const Profile: React.FC = () => {
               value={formData.contact_number}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`${isEditing ? 
-                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300' 
+              className={`${isEditing ?
+                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
@@ -224,8 +236,8 @@ const Profile: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               disabled={!isEditing}
-              className={`${isEditing ? 
-                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300' 
+              className={`${isEditing ?
+                'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
@@ -255,9 +267,18 @@ const Profile: React.FC = () => {
       </div>
 
       {toggleUp && (
-        <Update userProfile={formData} refetchProfile={refetchProfile} setIsEditing={setIsEditing} setValidationError={setValidationError}/>
+        <Update userProfile={formData} refetchProfile={refetchProfile} setIsEditing={setIsEditing} setValidationError={setValidationError} setToggleUpdate={setToggleUpdate} />
+      )}
+      {toggleUpdate && (
+
+        <div className={`absolute right-5 top-28 ${toggleUpdate ? 'notification-enter' : 'notification-exit'}`}>
+          <UpdateNotif setToggleUpdate={setToggleUpdate} />
+        </div>
+
       )}
     </section>
+
+
   );
 };
 
