@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useMyContext } from '../context/MyContext';
 import Update from '../components/Update';
+
+import { validateFirstName,validateMiddleName,validateLastName,validateAge,validateContactNumber,validateEmail } from '../constants/validation';
 interface UserProfile {
   first_name: string;
   middle_name: string;
@@ -10,6 +12,16 @@ interface UserProfile {
   age: number;
   contact_number: string;
   email: string;
+}
+
+interface ValidationError {
+  fnameError: string;
+  lnameError: string;
+  mnameError: string;
+  bdayError: string;
+  ageError: string;
+  cnumberError: string;
+  emailError: string;
 }
 
 const Profile: React.FC = () => {
@@ -24,6 +36,16 @@ const Profile: React.FC = () => {
     contact_number: '',
     email: ''
   });
+
+  const [validationError,setValidationError] = useState<ValidationError>({
+  fnameError: "",
+  lnameError:"",
+  mnameError: "",
+  bdayError: "", 
+  ageError: "",
+  cnumberError: "",
+  emailError: "",
+  })
 
   const {toggleUp,setToggleUp} = useMyContext();
 
@@ -95,6 +117,9 @@ const Profile: React.FC = () => {
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
+          {validationError.fnameError && (
+            <p className='text-red-600 mt-5'>{validationError.fnameError}</p>
+          )}
 
           <div>
             <label htmlFor="middle_name" className="block text-slate-100 text-sm font-medium">Middle Name</label>
@@ -111,6 +136,10 @@ const Profile: React.FC = () => {
             />
           </div>
 
+          {validationError.mnameError && (
+            <p className='mt-5 text-red-600'>{validationError.mnameError}</p>
+          )}
+
           <div>
             <label htmlFor="last_name" className="block text-slate-100 text-sm font-medium">Last Name</label>
             <input
@@ -125,6 +154,10 @@ const Profile: React.FC = () => {
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
+
+          {validationError.lnameError && (
+            <p className='mt-5 text-red-600'>{validationError.lnameError}</p>
+          )}
 
           <div>
             <label htmlFor="birthday" className="block text-slate-100 text-sm font-medium">Birthday</label>
@@ -141,6 +174,11 @@ const Profile: React.FC = () => {
             />
           </div>
 
+          {validationError.bdayError && (
+            <p className='mt-5 text-red-600'>{validationError.bdayError}</p>
+          )}
+          
+
           <div>
             <label htmlFor="age" className="block text-slate-100 text-sm font-medium">Age</label>
             <input
@@ -155,6 +193,9 @@ const Profile: React.FC = () => {
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
+          {validationError.ageError && (
+            <p className='mt-5 text-red-600'>{validationError.ageError}</p>
+          )}
 
           <div>
             <label htmlFor="contact_number" className="block text-slate-100 text-sm font-medium">Contact Number</label>
@@ -170,6 +211,9 @@ const Profile: React.FC = () => {
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
+          {validationError.cnumberError && (
+            <p className='mt-5 text-red-600'>{validationError.cnumberError}</p>
+          )}
 
           <div>
             <label htmlFor="email" className="block text-slate-100 text-sm font-medium">Email</label>
@@ -185,6 +229,10 @@ const Profile: React.FC = () => {
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
             />
           </div>
+
+          {validationError.emailError && (
+            <p className='mt-5 text-red-600'>{validationError.emailError}</p>
+          )}
 
           <div className="flex justify-between flex-col sm:flex-row">
             <button
@@ -207,7 +255,7 @@ const Profile: React.FC = () => {
       </div>
 
       {toggleUp && (
-        <Update userProfile={formData} refetchProfile={refetchProfile} setIsEditing={setIsEditing}/>
+        <Update userProfile={formData} refetchProfile={refetchProfile} setIsEditing={setIsEditing} setValidationError={setValidationError}/>
       )}
     </section>
   );

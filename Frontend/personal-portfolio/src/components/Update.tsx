@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useMyContext } from "../context/MyContext";
-
+import { validateFirstName,validateMiddleName,validateBirthday,validateLastName,validateAge,validateContactNumber,validateEmail } from '../constants/validation';
 interface UserProfile {
     first_name: string;
     middle_name: string;
@@ -11,22 +11,80 @@ interface UserProfile {
     email: string;
   }
   
-  
+  interface ValidationError {
+    fnameError: string;
+    lnameError: string;
+    mnameError: string;
+    bdayError : string
+    ageError: string;
+    cnumberError: string;
+    emailError: string;
+  }
  
   interface LogOutProps {
     userProfile: UserProfile; 
     refetchProfile: () => void;
     setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;  
+    setValidationError: React.Dispatch<React.SetStateAction<ValidationError>>;
   }
   
-  const Update: React.FC<LogOutProps> = ({ userProfile,refetchProfile, setIsEditing }) => { // Destructure userProfile prop
+  const Update: React.FC<LogOutProps> = ({ userProfile,refetchProfile, setIsEditing,setValidationError }) => { 
     const { setToggleUp } = useMyContext();
-  
+   
     const handleUpdate = async (e: React.FormEvent) => {
       e.preventDefault();
-  
     
-      const response = await axios.post('http://127.0.0.1:5000/user-profile/update', userProfile, {
+     
+      const trimmedUserProfile = {
+        first_name: userProfile.first_name.trim(),
+        middle_name: userProfile.middle_name.trim(),
+        last_name: userProfile.last_name.trim(),
+        birthday: userProfile.birthday,
+        age: userProfile.age,
+        contact_number: userProfile.contact_number.trim(),
+        email: userProfile.email.trim()
+      };
+      
+    
+      setValidationError({
+        fnameError : "",
+        lnameError : "",
+        mnameError : "",
+        bdayError : "",
+        ageError: "",
+        cnumberError : "",
+        emailError: "",
+      });
+  
+
+
+    const fnameError = validateFirstName(userProfile.first_name);
+    const lnameError = validateLastName(userProfile.last_name);
+    const mnameError = validateMiddleName(userProfile.middle_name || ""); 
+    const bdayError = validateBirthday(userProfile.birthday,userProfile.age);
+
+    const ageError = validateAge(userProfile.age);
+    const cnumberError = validateContactNumber(userProfile.contact_number);
+    const emailError = validateEmail(userProfile.email);
+    
+
+    setValidationError({
+      fnameError : fnameError,
+      lnameError : lnameError,
+      mnameError : mnameError,
+      bdayError : bdayError,
+      ageError: ageError,
+      cnumberError : cnumberError,
+      emailError: emailError,
+    });
+
+    if (fnameError || lnameError || mnameError ||bdayError || ageError || cnumberError || emailError) {
+      setToggleUp(false);
+      return;
+     
+    }
+    
+      const response = await axios.post('http://127.0.0.1:5000/user-profile/update', trimmedUserProfile, {
         headers: {
             'Content-Type': 'application/json',
         }

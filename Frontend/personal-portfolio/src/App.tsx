@@ -27,14 +27,14 @@ const Main: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, setIsAuthenticated, toggleLog } = useMyContext();
 
-  // Store the current path before navigating away
+ 
   useEffect(() => { 
     if (isAuthenticated) {
       localStorage.setItem('currentPath', location.pathname);  // Save the current path
     }
   }, [location, isAuthenticated]);
 
-  // On page load, check if the user is authenticated and restore the path
+
   useEffect(() => {
     const sessionID = localStorage.getItem("session");
 
@@ -42,7 +42,7 @@ const Main: React.FC = () => {
       setIsAuthenticated(true);
     }
     
-    // Retrieve the saved path after a refresh
+   
     const savedPath = localStorage.getItem('currentPath');
     if (savedPath) {
       navigate(savedPath);  // Navigate to the saved path
