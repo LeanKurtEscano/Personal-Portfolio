@@ -14,7 +14,7 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
 
-  const { isAuthenticated, userDetails, setUserDetails, setToggleLog } = useMyContext();
+  const {userDetails,setToggleLog } = useMyContext();
 
   const toUserProfile = () => {
     navigate('/dashboard/profile');
@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
 
 
   const handleMenuClick = (index: number) => {
-    if (index === 3) {
+    if (index === 4) {
       setToggleLog(true);
     } else {
       setActiveIndex(index);

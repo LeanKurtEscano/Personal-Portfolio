@@ -1,5 +1,7 @@
-import { faHistory, faDatabase, faInfoCircle, faSignOutAlt, faFileCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import { faCheckCircle,faHome,faBlog, faExclamationTriangle, faRobot, faUserFriends, faFileAlt,faUser, faFileImport } from '@fortawesome/free-solid-svg-icons';
+import {  faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
+import { faUserEdit,faHome,faBlog, faUser} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 export const navItems = [
     {text: "Home", link: '/dashboard/home'},
@@ -12,7 +14,9 @@ export const menuItems = [
 
     { icon: faHome, text: "Home", url: '/dashboard/home' },
     { icon: faUser, text: "Profile", url: '/dashboard/profile' },
+    { icon: faUserEdit, text: "Manage Users", url: '/dashboard/user' },
     { icon: faBlog, text: "Blog", url: '/dashboard/blog' },
+   
     { icon: faSignOutAlt, text: "Logout",  }
  
    
