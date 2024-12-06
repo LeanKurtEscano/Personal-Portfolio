@@ -4,41 +4,56 @@ from Blueprints.model import get_db_connection
 pr = Blueprint('pr', __name__)
 
 
-# Route to fetch the profile details
 @pr.route("/profile", methods=["POST"])
 def get_profile():
-  
-    user_id=1
-    db = get_db_connection()
-    cursor = db.cursor()
+    user_id = 1  # Assuming the user_id is hardcoded for now
+    db = None
+    cursor = None
 
-   
-    cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
-    user = cursor.fetchone()
+    try:
+        # Establish a database connection
+        db = get_db_connection()
+        cursor = db.cursor()
 
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+        # Execute the query to fetch the user profile
+        cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
 
-    print(user[4])
-    profile_data = {
-        "first_name": user[1],
-        "middle_name": user[2],
-        "last_name": user[3],
-        "birthday": user[4],
-        "age": user[5],
-        "contact_number": user[6],
-        "email": user[7],
-    }
+        if not user:
+            return jsonify({"error": "User not found"}), 404
 
-    return jsonify(profile_data), 200
+        # Prepare the profile data
+        profile_data = {
+            "first_name": user[1],
+            "middle_name": user[2],
+            "last_name": user[3],
+            "birthday": user[4],
+            "age": user[5],
+            "contact_number": user[6],
+            "email": user[7],
+        }
+
+       
+        return jsonify(profile_data), 200
+
+    except Exception as err:
+        
+        print(f"Error: {err}")
+        return jsonify({"error": f"An error occurred: {err}"}), 500
+    
+    finally:
+       
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()
 
 
 
 @pr.route("/update", methods=["POST"])
 def update_profile():
     try:
-        user_id = 1  # Assuming the user ID is 1 (you may get it from session or token)
-
+        user_id = 1  
         data = request.get_json()
 
         first_name = data.get('first_name')
@@ -49,16 +64,29 @@ def update_profile():
         birthday = data.get('birthday')
         age = data.get('age')
 
-        # Validation checks for required fields
+       
         if not all([first_name, last_name, email, middle_name, age, contact_number]):
             return jsonify({"error": "All fields are required"}), 400
 
         db = get_db_connection()
         cursor = db.cursor()
 
-        # Fetch current profile data
         cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
         current_data = cursor.fetchone()
+        
+        if not current_data:
+            return jsonify({"error": "User not found"}), 404
+
+        
+        current_email = current_data[7]  
+
+    
+        if email != current_email:
+            
+            cursor.execute("SELECT * FROM users_crud WHERE Email = %s", (email,))
+            user_email = cursor.fetchone()
+            if user_email:
+                return jsonify({"email": f"Email {email} is already registered."}), 400
 
 
         # Check if there are any changes to the data
@@ -94,3 +122,9 @@ def update_profile():
       
         print(f"Error: {err}")
         return jsonify({"error": f"An error occurred: {err}"}), 500
+    finally:
+        
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()

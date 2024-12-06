@@ -3,7 +3,47 @@ from Blueprints.model import get_db_connection
 
 cr = Blueprint('cr', __name__)
 
+@cr.route('/create', methods = ["POST"])
+def create_user():
+    data = request.get_json()
+    first_name = data.get('first_name')  
+    middle_name = data.get('middle_name')
+    last_name = data.get('last_name')
+    email = data.get('email')
+    contact_number = data.get('contact_number')
+    birthday = data.get('birthday')
+    age = data.get('age')
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM users_crud WHERE Email = %s",(email,))
+        user_email = cursor.fetchone()
+        
+        if user_email:
+            return jsonify({"email": f"Email {email} is already registered."}), 400  
+        cursor.execute(
+    'INSERT INTO users_crud (Firstname, Middlename, Lastname, Birthday, Age, Contact_number, Email) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+    (first_name, middle_name, last_name, birthday, age, contact_number, email))
+        
+        conn.commit()
+        return jsonify({"success": "User Created"}), 200
 
+
+    except Exception as e:
+        print(f"{e}")
+        return jsonify({"error": "Failed to Create User"}), 500
+        
+    finally:
+        
+        if cursor:
+            cursor.close()
+            
+        if conn:
+            conn.close()
+        
+    
 @cr.route('/read', methods=["GET"])
 def users_data():
     try:
@@ -39,6 +79,7 @@ def users_data():
 
     finally:
       
+      
         if conn:
             conn.close()
 
@@ -66,6 +107,8 @@ def delete_user(user_id):
         return jsonify({"error": str(e)}), 500
 
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             conn.close()
 
@@ -73,8 +116,6 @@ def delete_user(user_id):
 @cr.route("/users/<int:id>", methods=["POST"])
 def update_profile(id):
     try:
-    
-
         data = request.get_json()
 
         first_name = data.get('first_name')
@@ -89,15 +130,29 @@ def update_profile(id):
         if not all([first_name, last_name, email, middle_name, age, contact_number]):
             return jsonify({"error": "All fields are required"}), 400
 
-        db = get_db_connection()
-        cursor = db.cursor()
-
-        # Fetch current profile data
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        
         cursor.execute("SELECT * FROM users_crud WHERE id = %s", (id,))
         current_data = cursor.fetchone()
 
+       
+        if not current_data:
+            return jsonify({"error": "User not found"}), 404
 
-        # Check if there are any changes to the data
+        
+        current_email = current_data[7]  
+
+    
+        if email != current_email:
+            
+            cursor.execute("SELECT * FROM users_crud WHERE Email = %s", (email,))
+            user_email = cursor.fetchone()
+            if user_email:
+                return jsonify({"email": f"Email {email} is already registered."}), 400
+
+      
         if current_data and (
             first_name == current_data[1] and
             middle_name == current_data[2] and
@@ -115,21 +170,25 @@ def update_profile(id):
             SET Firstname = %s, Middlename = %s, Lastname = %s, Birthday = %s, Age = %s, Contact_number = %s, Email = %s
             WHERE id = %s
         """, (first_name, middle_name, last_name, birthday, age, contact_number, email, id))
-        db.commit()
+        conn.commit()
 
-      
         print(f"Rows affected by update: {cursor.rowcount}")
 
         if cursor.rowcount > 0:
             return jsonify({"success": "Profile updated successfully"}), 200
         else:
-            
             return jsonify({"info": "No changes detected or applied"}), 200
 
     except Exception as err:
-      
         print(f"Error: {err}")
         return jsonify({"error": f"An error occurred: {err}"}), 500
+    finally:
+        
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
 
 @cr.route("/user/<int:id>", methods=["POST"])
 def get_user(id):
@@ -155,5 +214,8 @@ def get_user(id):
         "contact_number": user[6],
         "email": user[7],
     }
+    
+    cursor.close()
+    db.close()
 
     return jsonify(profile_data), 200
