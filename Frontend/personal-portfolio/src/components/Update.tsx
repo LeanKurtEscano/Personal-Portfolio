@@ -43,7 +43,7 @@ interface UserProfile {
         birthday: userProfile.birthday,
         age: userProfile.age,
         contact_number: userProfile.contact_number.trim(),
-        email: userProfile.email.trim()
+        email: userProfile.email.trim(),
       };
       
     

@@ -115,29 +115,43 @@ export const validateContactNumber = (contactNumber: string): string => {
 
 
 export const validateEmail = (email: string): string => {
+    const validProviders = [
+        'gmail.com',
+        'yahoo.com',
+        'outlook.com',
+        'hotmail.com',
+        'aol.com',
+        'icloud.com',
+        'gov.ph' // Includes Philippine government domains
+    ];
 
-    const validProviders = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'aol.com', 'icloud.com'];
-
-    // Regex for matching a valid email format with a specific set of allowed domains
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|co|io|co\.uk)$/;
+    // Trim the email to remove leading or trailing spaces
+    email = email.trim();
 
     if (!email) return "Email is required.";
-    
-   
-    if (!emailRegex.test(email.trim())) return "Invalid email format. Please use a valid email provider.";
 
-    // Extract the domain
-    const domain = email.split('@')[1];
-    
-    // Ensure the domain is in the list of valid email providers
-    if (domain && !validProviders.includes(domain)) {
-        return `Invalid email format. ${domain} is not a recognized email provider.`;
+   
+    const localPart = email.split('@')[0];
+    if (localPart.length > 64) {
+        return "The local part (before the '@') of the email address cannot exceed 64 characters.";
     }
 
-    // Ensure the domain name part does not contain numbers (except in valid cases like .co.uk)
-    if (domain && /\d/.test(domain.split('.')[0]) && !domain.endsWith('.co.uk')) {
-        return "Invalid email format. Domain should not contain numbers.";
+    
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}(\.[a-z]{2,})?$/;
+
+    if (!emailRegex.test(email)) {
+        return "Invalid email format. Please enter a valid email address.";
+    }
+
+    
+    const domain = email.split('@')[1];
+
+    
+    const isGovPh = domain.endsWith('.gov.ph'); // Allow any subdomain under .gov.ph
+    if (!validProviders.includes(domain) && !isGovPh) {
+        return `Invalid email domain. ${domain} is not a recognized email provider.`;
     }
 
     return "";
 };
+

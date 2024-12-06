@@ -14,6 +14,7 @@ import Login from './sections/Login';
 import Profile from './sections/Profile';
 import User from './sections/User';
 import UpdateUser from './sections/UpdateUser';
+import Create from './sections/Create';
 
 function App() {
   return (
@@ -82,6 +83,7 @@ const Main: React.FC = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="user" element={<User />} />
           <Route path="user/update/:userId" element={<UpdateUser />} />
+          <Route path="create" element={<Create />} />
         
 
         </Route>

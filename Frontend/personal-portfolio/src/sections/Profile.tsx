@@ -68,7 +68,7 @@ const Profile: React.FC = () => {
           birthday: formattedBirthday,
           age: response.data.age,
           contact_number: response.data.contact_number,
-          email: response.data.email
+          email: response.data.email.trim()
         })
         console.log(response.data);
       }
@@ -127,7 +127,7 @@ const Profile: React.FC = () => {
               className={`${isEditing ?
                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
-            />
+            required/>
           </div>
           {validationError.fnameError && (
             <p className='text-red-600 mt-5'>{validationError.fnameError}</p>
@@ -145,7 +145,7 @@ const Profile: React.FC = () => {
               className={`${isEditing ?
                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
-            />
+           required />
           </div>
 
           {validationError.mnameError && (
@@ -164,7 +164,7 @@ const Profile: React.FC = () => {
               className={`${isEditing ?
                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
-            />
+            required/>
           </div>
 
           {validationError.lnameError && (
@@ -183,7 +183,7 @@ const Profile: React.FC = () => {
               className={`${isEditing ?
                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
-            />
+           required />
           </div>
 
           {validationError.bdayError && (
@@ -203,7 +203,7 @@ const Profile: React.FC = () => {
               className={`${isEditing ?
                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
-            />
+            required/>
           </div>
           {validationError.ageError && (
             <p className='mt-5 text-red-600'>{validationError.ageError}</p>
@@ -221,7 +221,7 @@ const Profile: React.FC = () => {
               className={`${isEditing ?
                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
-            />
+            required/>
           </div>
           {validationError.cnumberError && (
             <p className='mt-5 text-red-600'>{validationError.cnumberError}</p>
@@ -239,7 +239,7 @@ const Profile: React.FC = () => {
               className={`${isEditing ?
                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
-            />
+            required/>
           </div>
 
           {validationError.emailError && (

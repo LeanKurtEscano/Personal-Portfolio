@@ -31,6 +31,7 @@ const UpdateUser: React.FC = () => {
     const { userId } = useParams();
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [toggleUpdate, setToggleUpdate] = useState(false);
+    const [emailError, setEmailError] = useState("");
     const [formData, setFormData] = useState<UserProfile>({
         first_name: '',
         middle_name: '',
@@ -82,8 +83,9 @@ const UpdateUser: React.FC = () => {
                 console.log(response.data);
             }
 
-        } catch (error) {
-            alert("Failed to fetch data");
+        } catch (error: any) {
+           alert("Failed to get User");
+            
 
         }
 
@@ -269,6 +271,10 @@ const UpdateUser: React.FC = () => {
                         <p className='mt-5 text-red-600'>{validationError.emailError}</p>
                     )}
 
+                      {emailError && (
+                          <p className='mt-5 text-red-600'>{emailError}</p>
+                    )}
+
                     <div className="flex justify-between flex-col sm:flex-row">
                         <button
                             type="button"
@@ -290,7 +296,7 @@ const UpdateUser: React.FC = () => {
             </div>
 
             {toggleUp && (
-                <UpdateCrud userProfile={formData} refetchProfile={refetchProfile} setIsEditing={setIsEditing} setValidationError={setValidationError} setToggleUpdate={setToggleUpdate} userId={userId} />
+                <UpdateCrud userProfile={formData} refetchProfile={refetchProfile} setIsEditing={setIsEditing} setValidationError={setValidationError} setToggleUpdate={setToggleUpdate} setEmailError={setEmailError} userId={userId} />
             )}
             {toggleUpdate && (
 

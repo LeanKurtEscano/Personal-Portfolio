@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useMyContext } from '../context/MyContext';
-import UpdateNotif from '../components/UpdateNotif';
-import UpdateCrud from '../components/UpdateCrud';
-import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import CreateNotif from '../components/CreateNotif';
+import { validateFirstName, validateMiddleName, validateBirthday, validateLastName, validateAge, validateContactNumber, validateEmail } from '../constants/validation';
 
 interface UserProfile {
     first_name: string;
@@ -29,8 +28,10 @@ interface ValidationError {
 
 const Create: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [toggleUpdate, setToggleUpdate] = useState(false);
+    const [toggleCreate, setToggleCreate] = useState(false);
+    const [emailError, setEmailError] = useState("");
     const [formData, setFormData] = useState<UserProfile>({
+    
         first_name: '',
         middle_name: '',
         last_name: '',
@@ -39,6 +40,7 @@ const Create: React.FC = () => {
         contact_number: '',
         email: ''
     });
+   
 
 
     const [validationError, setValidationError] = useState<ValidationError>({
@@ -51,26 +53,105 @@ const Create: React.FC = () => {
         emailError: "",
     })
 
-    const { toggleUp, setToggleUp } = useMyContext();
     const navigate = useNavigate();
 
     const handleGoBack = () => {
         navigate('/dashboard/user');
     };
 
+    const createUser = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setEmailError("");
+        const trimmedUserProfile = {
+            first_name: formData.first_name.trim(),
+            middle_name: formData.middle_name.trim(),
+            last_name: formData.last_name.trim(),
+            birthday: formData.birthday,
+            age: formData.age,
+            contact_number: formData.contact_number.trim(),
+            email: formData.email.trim(),
+        };
 
- 
+
+
+        setValidationError({
+            fnameError: "",
+            lnameError: "",
+            mnameError: "",
+            bdayError: "",
+            ageError: "",
+            cnumberError: "",
+            emailError: "",
+        });
+
+
+
+        const fnameError = validateFirstName(formData.first_name);
+        const lnameError = validateLastName(formData.last_name);
+        const mnameError = validateMiddleName(formData.middle_name || "");
+        const bdayError = validateBirthday(formData.birthday, formData.age);
+
+        const ageError = validateAge(formData.age);
+        const cnumberError = validateContactNumber(formData.contact_number);
+        const emailError = validateEmail(formData.email);
+
+
+        setValidationError({
+            fnameError: fnameError,
+            lnameError: lnameError,
+            mnameError: mnameError,
+            bdayError: bdayError,
+            ageError: ageError,
+            cnumberError: cnumberError,
+            emailError: emailError,
+        });
+
+        if (fnameError || lnameError || mnameError || bdayError || ageError || cnumberError || emailError) {
+            return;
+
+        }
+
+        try {
+            const response = await axios.post(`http://127.0.0.1:5000/user-management/create`, 
+                trimmedUserProfile
+
+            , {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            if (response.status === 200) {
+                setToggleCreate(true);
+            }
+
+        } catch (error: any) {
+            const {data} = error.response
+
+            if(data.email){
+                setEmailError(data.email);
+            } else {
+                alert("Failed to create user");
+            }
+            
+
+        }
+
+    }
+
+
+
 
     useEffect(() => {
-        if (toggleUpdate) {
+        if (toggleCreate) {
             const timer = setTimeout(() => {
-                setToggleUpdate(false);
+                setToggleCreate(false);
             }, 7000);
             return () => clearTimeout(timer);
         }
-    }, [toggleUpdate]);
+    }, [toggleCreate]);
 
-   
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -78,10 +159,8 @@ const Create: React.FC = () => {
     };
 
 
-    const showUpdate = () => {
-        setToggleUp(!toggleUp);
-    }
-   
+
+
 
     return (
         <section className="flex items-center h-auto min-h-screen pb-11 justify-center bg-darkbg">
@@ -110,7 +189,7 @@ const Create: React.FC = () => {
                             type="text"
                             value={formData.first_name}
                             onChange={handleChange}
-                            disabled={!isEditing}
+
                             className={`${isEditing ?
                                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
@@ -128,7 +207,7 @@ const Create: React.FC = () => {
                             type="text"
                             value={formData.middle_name}
                             onChange={handleChange}
-                            disabled={!isEditing}
+
                             className={`${isEditing ?
                                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
@@ -147,7 +226,7 @@ const Create: React.FC = () => {
                             type="text"
                             value={formData.last_name}
                             onChange={handleChange}
-                            disabled={!isEditing}
+
                             className={`${isEditing ?
                                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
@@ -166,7 +245,7 @@ const Create: React.FC = () => {
                             type="date"
                             value={formData.birthday}
                             onChange={handleChange}
-                            disabled={!isEditing}
+
                             className={`${isEditing ?
                                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
@@ -186,7 +265,7 @@ const Create: React.FC = () => {
                             type="number"
                             value={formData.age}
                             onChange={handleChange}
-                            disabled={!isEditing}
+
                             className={`${isEditing ?
                                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
@@ -204,7 +283,7 @@ const Create: React.FC = () => {
                             type="text"
                             value={formData.contact_number}
                             onChange={handleChange}
-                            disabled={!isEditing}
+
                             className={`${isEditing ?
                                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
@@ -222,7 +301,7 @@ const Create: React.FC = () => {
                             type="email"
                             value={formData.email}
                             onChange={handleChange}
-                            disabled={!isEditing}
+
                             className={`${isEditing ?
                                 'mt-1 p-2 border rounded w-full border-inputcolor text-slate-300 placeholder:text-inputtext bg-inputcolor hover:bg-inputcolor focus:bg-inputcolor focus:ring-0 focus:border-inputcolor transition duration-300'
                                 : 'mt-1 p-2 border rounded w-full text-slate-300 bg-inputcolor'}`}
@@ -233,29 +312,25 @@ const Create: React.FC = () => {
                         <p className='mt-5 text-red-600'>{validationError.emailError}</p>
                     )}
 
-                    <div className="flex justify-between flex-col sm:flex-row">
-                        <button
-                            type="button"
-                            onClick={() => setIsEditing(prev => !prev)}
-                            className="mt-4 px-4 py-2 bg-cyan-600 text-white rounded"
-                        >
-                            {isEditing ? 'Cancel' : 'Edit'}
-                        </button>
-                        {isEditing && (
-                            <div
-                                onClick={showUpdate}
-                                className="mt-4 px-4 cursor-pointer py-2 bg-blue-600 text-white rounded"
-                            >
-                                Save
-                            </div>
-                        )}
-                    </div>
+                    {emailError && (
+                          <p className='mt-5 text-red-600'>{emailError}</p>
+                    )}
+
+                    <button onClick={createUser}
+                       
+                        className="mt-4 px-4 py-2 bg-cyan-600 text-white rounded w-full transform transition duration-300 ease-in-out hover:scale-105 hover:bg-cyan-500 focus:ring-2 focus:ring-cyan-500"
+                    >
+                        Create
+                    </button>
+
+
+
                 </form>
             </div>
-            {toggleUpdate && (
+            {toggleCreate && (
 
-                <div className={`absolute right-5 top-28 ${toggleUpdate ? 'notification-enter' : 'notification-exit'}`}>
-                    <UpdateNotif setToggleUpdate={setToggleUpdate} />
+                <div className={`absolute right-5 top-28 ${toggleCreate ? 'notification-enter' : 'notification-exit'}`}>
+                    <CreateNotif setToggleCreate={setToggleCreate} />
                 </div>
 
             )}
