@@ -1,6 +1,6 @@
 from flask import Blueprint, session, jsonify, request
 from Blueprints.model import get_db_connection
-
+import bcrypt
 cr = Blueprint('cr', __name__)
 
 @cr.route('/create', methods = ["POST"])
@@ -13,7 +13,9 @@ def create_user():
     contact_number = data.get('contact_number')
     birthday = data.get('birthday')
     age = data.get('age')
+    #password = data.get('password')
     
+    #hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -26,6 +28,14 @@ def create_user():
         cursor.execute(
     'INSERT INTO users_crud (Firstname, Middlename, Lastname, Birthday, Age, Contact_number, Email) VALUES (%s, %s, %s, %s, %s, %s, %s)',
     (first_name, middle_name, last_name, birthday, age, contact_number, email))
+        
+        """
+         cursor.execute(
+    'INSERT INTO users_crud (Firstname, Middlename, Lastname, Birthday, Age, Contact_number, Email,Password) VALUES (%s, %s, %s, %s, %s, %s, %s,%s)',
+    (first_name, middle_name, last_name, birthday, age, contact_number, email,hashed_password))
+        
+        
+        """
         
         conn.commit()
         return jsonify({"success": "User Created"}), 200
@@ -55,7 +65,9 @@ def users_data():
         cursor.execute("SELECT id, Firstname, Middlename, Lastname, Birthday, Age, Contact_number, Email FROM users_crud")
         rows = cursor.fetchall()
 
-      
+        #main account
+        #main_account_id = 1
+        
         users = [
             {
                 "id": row[0],
@@ -67,7 +79,7 @@ def users_data():
                 "contact_number": row[6],
                 "email": row[7],
             }
-            for row in rows
+            for row in rows  # for row in rows if row[0] != main_account_id
         ]
 
        
@@ -78,7 +90,8 @@ def users_data():
         return jsonify({"error": str(e)}), 500
 
     finally:
-      
+        if cursor:
+            cursor.close()
       
         if conn:
             conn.close()

@@ -11,18 +11,18 @@ def get_profile():
     cursor = None
 
     try:
-        # Establish a database connection
+        
         db = get_db_connection()
         cursor = db.cursor()
 
-        # Execute the query to fetch the user profile
+       
         cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
         user = cursor.fetchone()
 
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        # Prepare the profile data
+      
         profile_data = {
             "first_name": user[1],
             "middle_name": user[2],
