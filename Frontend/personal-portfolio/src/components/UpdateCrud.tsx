@@ -23,7 +23,7 @@ interface ValidationError {
 
 interface LogOutProps {
   userProfile: UserProfile;
-  userId: Number;
+  userId?: string;
   refetchProfile: () => void;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   setValidationError: React.Dispatch<React.SetStateAction<ValidationError>>;

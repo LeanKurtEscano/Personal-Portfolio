@@ -122,14 +122,14 @@ const UpdateUser: React.FC = () => {
     }
 
     return (
-        <section className="flex items-center h-auto min-h-screen pb-11 justify-center bg-darkbg">
-            <div className="md:w-[500px] w-[200px] bg-darkbg p-4 sm:p-6">
-                <div className='flex flex-row'>
-                    <h1 className="bg-gradient-to-br mr-44 text-3xl from-cyan-400 to-blue-600 bg-clip-text text-transparent font-bold mb-4">Update </h1>
-                    <div className=' '>
+        <section className="flex items-center h-auto  min-h-screen pb-11 justify-center bg-darkbg">
+            <div className="md:w-[500px] w-[230px] bg-darkbg p-4 sm:p-6">
+                <div className='flex md:flex-row '>
+                <h1 className="bg-gradient-to-br md:mr-44 text-2xl from-cyan-400 to-blue-600 bg-clip-text text-transparent font-bold mb-4">Update </h1>
+                    <div className='pl-6  md:pl-0  '>
                         <button
                             onClick={handleGoBack}
-                            className="flex items-center  pb-2 py-2 text-white rounded-lg"
+                            className="flex items-center  pb-2 pt-1 text-white rounded-lg"
                         >
 
                             <span className="mr-2 text-xl">←</span> Go Back
@@ -286,7 +286,7 @@ const UpdateUser: React.FC = () => {
                         {isEditing && (
                             <div
                                 onClick={showUpdate}
-                                className="mt-4 px-4 cursor-pointer py-2 bg-blue-600 text-white rounded"
+                                className="mt-4 px-4 cursor-pointer flex items-center justify-center py-2 bg-blue-600 text-white rounded"
                             >
                                 Save
                             </div>

@@ -257,7 +257,7 @@ const Profile: React.FC = () => {
             {isEditing && (
               <div
                 onClick={showUpdate}
-                className="mt-4 px-4 cursor-pointer py-2 bg-blue-600 text-white rounded"
+                className="mt-4 px-4 flex items-center justify-center cursor-pointer py-2 bg-blue-600 text-white rounded"
               >
                 Save
               </div>
@@ -277,8 +277,6 @@ const Profile: React.FC = () => {
 
       )}
     </section>
-
-
   );
 };
 

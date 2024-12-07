@@ -7,7 +7,7 @@ import { useMyContext } from '../context/MyContext';
 const Navbar = () => {
 
     const [toggle, setToggle] = useState(false);
-    const { isAuthenticated,toggleLog, setToggleLog } = useMyContext();
+    const { isAuthenticated, toggleLog, setToggleLog } = useMyContext();
     const navigate = useNavigate();
 
     const toggleNav = () => {
@@ -25,13 +25,16 @@ const Navbar = () => {
         navigate('/');
     };
 
-   
+
     return (
         <header className='bg-navcolor'>
             <nav className="flex items-center justify-end bg-darkbg transition-all duration-700 w-full shadow-xl pt-4 pb-4 pr-36">
                 <div className='mr-8 absolute left-24'>
                     <Link to='/'>
-                        <img className="w-10 h-9 cursor-pointer" alt="Logo" />
+                        <h1 className="text-slate-200 text-xl font-bold">
+                            &lt;Lean /&gt;
+                        </h1>
+
                     </Link>
                 </div>
                 <div className={`nav-links duration-500 md:static p-4 absolute bg-darkbg md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5 ${toggle ? 'top-0' : ''}`}>
@@ -45,7 +48,7 @@ const Navbar = () => {
                             </li>
                         ))}
 
-                       
+
 
                         {isAuthenticated ? (
                             <li className='relative group font-normal' onClick={toggleLogOut}>
@@ -80,8 +83,8 @@ const Navbar = () => {
                             ))}
 
 
-                          
-                            
+
+
                             {isAuthenticated ? (
                                 <li className='relative group font-normal my-2' onClick={toggleLogOut}>
                                     <Link to='#' className="text-white font-bold mb-1">

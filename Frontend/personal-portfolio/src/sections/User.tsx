@@ -77,7 +77,7 @@ const User: React.FC = () => {
     return (
         <section className="w-full sm:overflow-y-auto flex flex-col min-h-screen pb-20 pt-20 md:pl-36 pl-20 bg-darkbg relative">
            
-            <div className=" pl-12 flex justify-start items-center mb-4 pr-6">
+            <div className=" md:pl-12 pl-3 flex justify-start items-center mb-4 pr-6">
                 <button
                     className="flex items-center space-x-2 bg-cyan-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-cyan-500 hover:scale-105 transition-transform duration-300"
                     onClick={() => navigate('/dashboard/create')}
