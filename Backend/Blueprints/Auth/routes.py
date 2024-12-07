@@ -18,7 +18,7 @@ def user_auth():
     cursor = db.cursor()
 
    
-    cursor.execute("SELECT * FROM users WHERE Firstname = %s", (username,))
+    cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
     user = cursor.fetchone()
 
  
