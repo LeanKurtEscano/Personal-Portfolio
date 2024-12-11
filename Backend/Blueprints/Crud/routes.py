@@ -103,9 +103,9 @@ def delete_user(user_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Check if user exists
         cursor.execute("SELECT id FROM users_crud WHERE id = %s", (user_id,))
         user = cursor.fetchone()
+        print(user_id)
 
         if not user:
             return jsonify({"error": "User not found"}), 404

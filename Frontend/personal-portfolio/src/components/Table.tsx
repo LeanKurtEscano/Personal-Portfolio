@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-
+import Delete from './Delete';
 interface UserData {
     id: number;
     firstname: string;
@@ -17,10 +17,17 @@ interface UserData {
 interface UserDataArray {
     data: UserData[];
     deleteUser: (userId: number) => void;
+    setToggleDelete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Table: React.FC<UserDataArray> = ({ data, deleteUser }) => {
     const navigate = useNavigate();
+    const [deleteUserId, setDeleteUserId] = useState<number | null>(null);
+
+
+    const showToggleModal = (id: number) => {
+        setDeleteUserId(id);
+    }
 
     return (
         <div className="md:relative w-11/12 overflow-x-auto mb-5">
@@ -59,15 +66,24 @@ const Table: React.FC<UserDataArray> = ({ data, deleteUser }) => {
                                             <FontAwesomeIcon icon={faEdit} />
                                         </button>
                                         <button
-                                            onClick={() => deleteUser(item.id)}
+                                            onClick={() => showToggleModal(item.id)}
                                             className="text-red-500 hover:text-red-700"
                                         >
                                             <FontAwesomeIcon icon={faTrash} />
                                         </button>
                                     </div>
                                 </td>
+
+                                {deleteUserId !== null && (
+                                    <Delete setShowDelete={() => setDeleteUserId(null)} deleteUser={deleteUser} id={deleteUserId} />
+                                )}
+
                             </tr>
+
+
                         ))
+
+
                     ) : (
                         <tr>
                             <td colSpan={8} className="px-1 py-4 text-center">

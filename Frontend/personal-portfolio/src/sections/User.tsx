@@ -33,6 +33,7 @@ const User: React.FC = () => {
             return () => clearTimeout(timer);
         }
     }, [toggleDelete]);
+    
     const deleteUser = async (userId: number) => {
         try {
             const response = await axios.delete(`http://127.0.0.1:5000/user-management/delete/${userId}`, {
@@ -91,7 +92,7 @@ const User: React.FC = () => {
                 <h1 className="text-slate-200 md:text-4xl text-md pr-14 font-bold">{emptyActivity}</h1>
             ) : (
                 <div className="flex overflow-x-auto items-center flex-col">
-                    <Table data={userData || []} deleteUser={deleteUser} />
+                    <Table data={userData || []} deleteUser={deleteUser} setToggleDelete= {setToggleDelete} />
                 </div>
             )}
 

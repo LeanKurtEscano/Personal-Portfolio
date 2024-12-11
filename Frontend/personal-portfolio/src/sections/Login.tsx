@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMyContext } from '../context/MyContext';
 
 import axios from 'axios';
@@ -49,7 +49,7 @@ const Login: React.FC = () => {
       if (response.data.success) {
         setIsAuthenticated(true);
         localStorage.setItem("session", JSON.stringify(response.data.session))
-        navigate('/dashboard');
+        navigate('/dashboard/home');
       }
 
     } catch (error: any) {
@@ -123,9 +123,7 @@ const Login: React.FC = () => {
               <p className='text-red-600'>{passwordError}</p>
             </div>
 
-            <div className='flex items-end pl-16 justify-end'>
-              <Link to='/email' className='text-cyan-500 hover:underline'>Forgot Password</Link>
-            </div>
+           
           </div>
 
 

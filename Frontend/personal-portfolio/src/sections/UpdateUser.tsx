@@ -78,7 +78,7 @@ const UpdateUser: React.FC = () => {
                     birthday: formattedBirthday,
                     age: response.data.age,
                     contact_number: response.data.contact_number,
-                    email: response.data.email
+                    email: response.data.email.trim()
                 })
                 console.log(response.data);
             }
